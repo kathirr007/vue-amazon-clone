@@ -24,9 +24,26 @@ app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-// require APIs
-const productRoutes = require('./routes/product')
-app.use('/api', productRoutes)
+// GET - Retrieve the data from the server
+app.get('/', (req, res) => {
+    res.json('Hello dear...')
+})
+
+// POST - Send data from frontend to the server
+app.post('/', (req, res) => {
+    let user = new User()
+    user.name = req.body.name
+    user.email = req.body.email
+    user.password = req.body.password
+
+    user.save(err => {
+        if(err) {
+            res.json(err)
+        } else {
+            res.json('new User is Successfully Saved')
+        }
+    })
+})
 
 
 app.listen(4000, err => {
