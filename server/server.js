@@ -10,7 +10,8 @@ dotenv.config()
 
 const app = express()
 
-mongoose.connect(process.env.DATABASEURI, { useNewUrlParser: true, useUnifiedTopology: true }, 
+debugger
+mongoose.connect(process.env.DATABASEURI, { useNewUrlParser: true, useUnifiedTopology: true },
 err => {
     if(err) {
         console.log(err)
