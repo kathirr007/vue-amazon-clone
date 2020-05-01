@@ -29,10 +29,10 @@ const productRoutes = require('./routes/product')
 app.use('/api', productRoutes)
 
 
-app.listen(3000, err => {
+app.listen(4004, err => {
     if(err) {
         console.log(err)
     } else {
-        console.log('Listening on PORT', 3000)
+        console.log('Listening on PORT', 4004)
     }
 })
