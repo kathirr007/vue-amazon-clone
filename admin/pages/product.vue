@@ -136,8 +136,8 @@
         data.append('price', this.price)
         data.append('description', this.description)
         data.append('stockQuantity', this.stockQuantity)
-        data.append('owner', this.ownerID)
-        data.append('category', this.categoryID)
+        data.append('ownerID', this.ownerID)
+        data.append('categoryID', this.categoryID)
         data.append('photo', this.selectedFile, this.selectedFile.name)
         // debugger
 
