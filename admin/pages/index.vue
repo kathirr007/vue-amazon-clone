@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="container-fluid browsing-history">
-      <div class="row">
+      <!-- <div class="row">
         <div v-for="(product) in products" :key="product._id" class="col-lg-3 col-sm-6 col-12">
           <b-card
             :title="product.title"
@@ -23,9 +23,8 @@
             class="mb-2 history-box img-fluid p-2"
           >
             <b-card-text>
-              Some quick example text to build on the card title and make up the bulk of the card's content.
+              {{product.description}}
             </b-card-text>
-            <!-- Product Rating -->
             <b-card-text>
               <a href=""></a>
               <i class="fas fa-star"></i>
@@ -36,32 +35,31 @@
               <span class="a-letter-space"></span>
               <span class="a-color-tertiary a-size-small asin-reviews">(1774)</span>
             </b-card-text>
-          <!-- Product price -->
             <b-card-text>
               Price: <span class="text-danger">{{product.price}}</span>
             </b-card-text>
 
             <div class="float-right">
               <b-button href="#" variant="primary">Update</b-button>
-              <b-button href="#" variant="primary">Delete</b-button>
+              <b-button href="#" variant="dark">Delete</b-button>
             </div>
           </b-card>
         </div>
-      </div>
-      <!-- <div class="row">
+      </div> -->
+      <div class="row">
         <div>
-          <b-card-group columns col-lg-3 col-sm-6 col-12>
+          <b-card-group columns class="px-3">
             <b-card
               v-for="(product) in products" :key="product._id"
               :title="product.title"
               :img-src="product.photo"
               :img-alt="product.title"
-              img-to img-fluid
+              img-top
               tag="article"
-              class="mb-2 history-box"
+              class="mb-2 history-box p-2"
             >
               <b-card-text>
-                Some quick example text to build on the card title and make up the bulk of the card's content.
+                {{product.description}}
               </b-card-text>
               <b-card-text>
                 <a href=""></a>
@@ -77,13 +75,15 @@
                 Price: <span class="text-danger">{{product.price}}</span>
               </b-card-text>
 
-              <b-button href="#" variant="primary">Update</b-button>
-              <b-button href="#" variant="primary">Delete</b-button>
+              <div class="float-right">
+                <b-button href="#" variant="primary">Update</b-button>
+                <b-button href="#" variant="dark">Delete</b-button>
+              </div>
             </b-card>
 
           </b-card-group>
         </div>
-      </div> -->
+      </div>
     </div>
   </main>
 </template>
@@ -115,5 +115,16 @@ export default {
  .card-img-top {
    height: 200px;
    object-fit: contain;
+ }
+ @media (min-width: 576px) {
+   .card-columns {
+     column-count: 2;
+     column-gap: 1rem;
+   }
+ }
+ @media (min-width: 992px) {
+   .card-columns {
+     column-count: 3;
+   }
  }
 </style>
