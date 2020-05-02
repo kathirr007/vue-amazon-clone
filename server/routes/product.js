@@ -5,16 +5,20 @@ const upload = require('../middlewares/upload-photo')
 
 // POST request - create a new product
 router.post('/products', upload.single('photo'), async (req, res) => {
+    // debugger
     try {
         let product = new Product()
+        product.owner = req.body.ownerID
+        product.category = req.body.categoryID
+        product.price = req.body.price
         product.title = req.body.title
         product.description = req.body.description
         product.photo = req.file.location
         product.stockQuantity = req.body.stockQuantity
-        product.price = req.body.price
 
         await product.save()
 
+        console.log(product)
         res.json({
             status: true,
             message: 'Product is Successfully saved..'
