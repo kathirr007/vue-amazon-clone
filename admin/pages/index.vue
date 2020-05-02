@@ -5,7 +5,7 @@
         <div class="col-sm-8 col-8">
           <h1 class="mb-3">All products</h1>
           <!-- Buttons -->
-          <a href="" class="a-button-buy-again">Add a new product</a>
+          <nuxt-link to="/product" class="a-button-buy-again">Add a new product</nuxt-link>
           <a href="" class="a-button-history mr-2">Add a new category</a>
           <a href="" class="a-button-history">Add a new owner</a>
         </div>
@@ -91,13 +91,16 @@
 <script>
 
 export default {
+  head: {
+      title: 'Amazon Clone | Home'
+    },
   // asyncData is fetching data before nuxt page finished loading on the browser
   // It is good for SEO because the data will be loaded first
   async asyncData({ $axios}) {
     // debugger
     try {
       let response = await $axios.$get('http://localhost:4004/api/products')
-      console.log(response.products)
+      // console.log(response.products)
       return {
         products: response.products
       }
@@ -107,7 +110,11 @@ export default {
   },
   components: {
 
-  }
+  },
+  transition (to, from) {
+      if (!from) { return 'slide-left' }
+      return  'slide-right'
+    },
 }
 </script>
 
