@@ -8,7 +8,7 @@
             Add a New Product Form
           </h1>
           <!-- <b-form @submit="onSubmit" @reset="onReset" v-if="show"> -->
-          <b-form>
+          <b-form ref="productForm">
             <!-- Category Selection dropdown -->
             <b-form-group label="Category:" label-for="productCategory">
               <b-form-select id="productCategory" class="text-capitalize" v-model="categoryID" required>
@@ -29,30 +29,36 @@
               </b-form-select>
             </b-form-group>
 
+            <!-- Product title -->
             <b-form-group label="Title:" label-for="productTitle"
               description="Please enter Product title here">
               <b-form-input id="productTitle" v-model="title" type="text" required placeholder="Enter product title">
               </b-form-input>
             </b-form-group>
 
+            <!-- Product Description -->
             <b-form-group label="Description: " label-for="productDescription">
               <b-form-textarea id="productDescription" v-model="description" placeholder="Enter product description..." rows="3" max-rows="6">
               </b-form-textarea>
             </b-form-group>
 
-            <b-form-group label="Photo:" :file-name-formatter="formatNames" label-for="productPhoto">
-              <b-form-file @change="onFileSelected($event)" id="productPhoto"></b-form-file>
+            <!-- Product images -->
+            <b-form-group label="Photo:" label-for="productPhoto">
+              <b-form-file @change="onFileSelected($event.target.files)" :file-name-formatter="formatNames" ref="prodImagesInput" multiple id="productPhoto"></b-form-file>
+              <!-- <b-form-file @change="onFileSelected($event)" :file-name-formatter="formatNames" id="productPhoto"></b-form-file> -->
             </b-form-group>
 
+            <!-- Product Price -->
             <b-form-group label="Price:" label-for="productPrice"
               description="Please enter Product price here">
               <b-form-input id="productPrice" v-model="price" type="number" required placeholder="Enter product price">
               </b-form-input>
             </b-form-group>
 
+            <!-- Product Stock Quantity -->
             <b-form-group label="Stock Quantity:" label-for="stockQuantity"
-              description="Please enter Product price here">
-              <b-form-input id="stockQuantity" v-model="stockQuantity" type="number" required placeholder="Enter product price">
+              description="Please enter Product stock quantity here">
+              <b-form-input id="stockQuantity" v-model="stockQuantity" type="number" required placeholder="Enter product stock quantity">
               </b-form-input>
             </b-form-group>
 
@@ -64,7 +70,7 @@
                 </span>
               </span>
             </span> -->
-            <b-button type="reset" variant="danger">Reset</b-button>
+            <b-button  ref="formReset" variant="danger">Reset</b-button>
           </b-form>
           <b-card class="mt-3" header="Form Data Result">
             <!-- <pre class="m-0">{{ product }}</pre> -->
@@ -84,7 +90,7 @@
 <script>
   export default {
     head: {
-      title: 'Amazon Clone | Add a new product'
+      title: 'Add a new product'
     },
     async asyncData({ $axios }) {
       try {
@@ -112,39 +118,94 @@
         ownerID: null,
         title: '',
         description: '',
-        price: 0,
+        price: null,
         stockQuantity: null,
         selectedFile: null,
+        selectedFiles: [],
       }
     },
+    comoputed:{
+
+    },
     methods: {
-      onFileSelected(event) {
+      onFileSelected(fileList) {
         // debugger
-        this.selectedFile = event.target.files[0]
+        // this.selectedFile = event.target.files[0]
+        this.selectedFiles = event.target.files
+        // for(let i=0; i<fileList.length; i++) {
+        //   this.selectedFiles.push(fileList[i])
+        // }
+        // console.log(this.selectedFiles, typeof(this.selectedFiles))
       },
-      formatNames(files) {
-        this.selectedFile = files[0]
+      formatNames(files=[]) {
+        // this.selectedFile = files[0]
+        if(files.length == 0) {
+          return "No file chosen"
+        }
         if (files.length === 1) {
           return files[0].name
         } else {
           return `${files.length} files selected`
         }
       },
+      resetProductForm() {
+        this.ownerID = null
+        this.categoryID = null
+        this.title = ''
+        this.description = ''
+        this.price = null
+        this.stockQuantity = null
+        this.selectedFile = null
+        this.selectedFiles = []
+      },
       async onAddProduct() {
         let data = new FormData()
+        for(let i=0; i<this.selectedFiles.length; i++) {
+          data.append('prodImages', this.selectedFiles[i])
+        }
         data.append('title', this.title)
         data.append('price', this.price)
         data.append('description', this.description)
         data.append('stockQuantity', this.stockQuantity)
         data.append('ownerID', this.ownerID)
         data.append('categoryID', this.categoryID)
-        data.append('photo', this.selectedFile, this.selectedFile.name)
+        // data.append('photo', this.selectedFile, this.selectedFile.name)
+        // data.append('prodImages', this.selectedFiles)
         // debugger
 
         let result = await this.$axios.$post('http://localhost:4004/api/products', data)
         console.log(`The new product ${this.title} is added successfully...`)
-        this.$router.push('/')
+        this.$refs.prodImagesInput.reset()
+        // this.$refs.productForm.reset()
+        // this.selectedFiles = []
+        // this.formatNames()
+        this.makeToast()
+        this.resetProductForm()
+        // this.$router.push('/')
       },
+      makeToast(append = false) {
+        // Use a shorter name for this.$createElement
+        const h = this.$createElement
+        // Increment the toast count
+        // Create the message
+        const vNodesMsg = h(
+          'p',
+          { class: ['text-center', 'mb-2'] },
+          [
+            h('b-spinner', { props: { type: 'grow', small: true } }),
+            'The new product ',
+            h('strong', `${this.title}`),
+            ' is added successfully... ',
+            h('b-spinner', { props: { type: 'grow', small: true } })
+          ],
+        )
+        this.$bvToast.toast(vNodesMsg, {
+          title: 'Product Upload Status',
+          autoHideDelay: 5000,
+          appendToast: append,
+          variant: 'info'
+        })
+      }
     }
   };
 
