@@ -5,7 +5,11 @@
   "author": "kkumarasamy",
   "private": true,
   "scripts": {
-    "dev": "(cd ../server && yarn start) & PORT=8000 nuxt",
+    "predev": "PORT=8000 nuxt",
+    "dev": "cd ../server && yarn start",
+    "dev-pc": "set PORT=8000 && nuxt",
+    "serve": "(cd ../server && npm run start)",
+    "serve-pc": "concurrently \"npm run serve\" \"npm run dev-pc\"",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate"

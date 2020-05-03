@@ -1,27 +1,38 @@
 const router = require('express').Router()
 const Product = require('../models/product')
 
-const upload = require('../middlewares/upload-photo')
+const {upload} = require('../middlewares/upload-photo')
 
 // POST request - create a new product
-router.post('/products', upload.single('photo'), async (req, res) => {
-    // debugger
+router.post('/products', upload.array('prodImages', 3), async (req, res) => {
+    debugger
     try {
+        let prodImages = req.files.map((file) => {
+            return {
+                    location: file.location,
+                    size: file.size,
+                    originalname: file.originalname,
+                   }
+        })
+
         let product = new Product()
+
         product.owner = req.body.ownerID
         product.category = req.body.categoryID
         product.price = req.body.price
         product.title = req.body.title
         product.description = req.body.description
-        product.photo = req.file.location
         product.stockQuantity = req.body.stockQuantity
+        product.photo = req.files[0].location
+        product.prodImages = prodImages
 
         await product.save()
 
         console.log(product)
         res.json({
             status: true,
-            message: 'Product is Successfully saved..'
+            message: 'Product is Successfully saved..',
+            prodImages
         })
     } catch(err) {
         res.status(500).json({
@@ -30,6 +41,15 @@ router.post('/products', upload.single('photo'), async (req, res) => {
         })
     }
 })
+
+/* router.post('/upload', upload.array('prodImages', 3), (req, res) => {
+    if (!req.files) res.status(400).json({ error: 'No files were uploaded.' })
+    console.log(req.files)
+    res.status(201).json({
+      message: 'Successfully uploaded ' + req.files.length + ' files!',
+      files: req.files
+    })
+  }) */
 
 // GET request - get all products
 router.get('/products', async(req,res) => {
