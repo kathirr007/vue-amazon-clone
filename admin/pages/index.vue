@@ -214,29 +214,6 @@ export default {
         .catch(err => {
           console.log(err)
         })
-
-/*       this.$bvModal.msgBoxConfirm(`Please confirm that you want to delete <span class="font-weight-bold">${title}</span>`, {
-          title: 'Please Confirm',
-          titleClass: 'text-white',
-          size: 'sm',
-          buttonSize: 'sm',
-          okVariant: 'danger',
-          okTitle: 'YES',
-          cancelTitle: 'NO',
-          footerClass: 'p-2',
-          hideHeaderClose: false,
-          centered: true
-        })
-        .then(value => {
-          if (value == true) {
-            this.onDeleteProduct(id, index, title)
-          } else {
-            return
-          }
-        })
-        .catch(err => {
-          // An error occurred
-        }) */
     },
     async onDeleteProduct(id, index, title) {
       try {
@@ -277,6 +254,11 @@ export default {
  @media (min-width: 992px) {
    .card-columns {
      column-count: 3;
+   }
+ }
+ @media (min-width: 1400px) {
+   .card-columns {
+     column-count: 4;
    }
  }
 /*  .VueCarousel {
