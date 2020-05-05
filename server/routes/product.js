@@ -5,7 +5,7 @@ const {upload} = require('../middlewares/upload-photo')
 
 // POST request - create a new product
 router.post('/products', upload.array('prodImages', 3), async (req, res) => {
-    debugger
+    // debugger
     try {
         let prodImages = req.files.map((file) => {
             return {
@@ -23,12 +23,12 @@ router.post('/products', upload.array('prodImages', 3), async (req, res) => {
         product.title = req.body.title
         product.description = req.body.description
         product.stockQuantity = req.body.stockQuantity
-        product.photo = req.files[0].location
-        product.prodImages = prodImages
+        product.photo = req.files.length !=0 ? req.files[0].location : ''
+        product.prodImages = req.files.length !=0 ? prodImages : []
 
         await product.save()
 
-        console.log(product)
+        // console.log(product)
         res.json({
             status: true,
             message: 'Product is Successfully saved..',
@@ -85,22 +85,33 @@ router.get('/products/:id', async(req,res) => {
 })
 
 // PUT request - Update a single product
-router.put("/products/:id", upload.single("photo"), async (req, res) => {
+router.put("/products/:id", upload.array("prodImages", 3), async (req, res) => {
   try {
+    let prodImages = req.files? req.files.map((file) => {
+        return {
+                location: file.location,
+                size: file.size,
+                originalname: file.originalname,
+                }
+    }) : []
+    let updateQuery = {
+        title: req.body.title,
+        description: req.body.description,
+        price: req.body.price,
+        stockQuantity: req.body.stockQuantity,
+        category: req.body.categoryID,
+        owner: req.body.ownerID,
+    }
+    if(req.files.length !=0) {
+        updateQuery.photo = req.files[0].location
+        updateQuery.prodImages = prodImages
+    }
     let product = await Product.findOneAndUpdate(
       { _id: req.params.id },
       {
-        $set: {
-          title: req.body.title,
-          description: req.body.description,
-          price: req.body.price,
-          stockQuantity: req.body.stockQuantity,
-          photo: req.file.location,
-          category: req.body.categoryID,
-          owner: req.body.ownerID,
-        },
+        $set: updateQuery
       },
-      { upsert: true }
+      { upsert: true, new: true }
     );
     res.json({
       success: true,

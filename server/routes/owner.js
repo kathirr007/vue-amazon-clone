@@ -1,15 +1,18 @@
 const router = require('express').Router()
 const Owner = require('../models/owner')
 
-const upload = require('../middlewares/upload-photo').upload
+const {upload} = require('../middlewares/upload-photo')
 
 // POST request - create a new owner
 router.post('/owners', upload.single('photo'), async (req, res) => {
     try {
+        // console.log(req)
         let owner = new Owner()
         owner.name = req.body.name
         owner.about = req.body.about
         owner.photo = req.file ? req.file.location : ''
+
+        debugger
 
         await owner.save()
 
@@ -18,6 +21,7 @@ router.post('/owners', upload.single('photo'), async (req, res) => {
             message: 'Owner is created Successfully...'
         })
     } catch(err) {
+        console.log(err)
         res.status(500).json({
             success: false,
             message: err.message
