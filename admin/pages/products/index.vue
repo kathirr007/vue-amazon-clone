@@ -44,9 +44,17 @@
 
             <!-- Product images -->
             <b-form-group label="Photo:" label-for="productPhoto">
-              <b-form-file @change="onFileSelected($event.target.files)" :file-name-formatter="formatNames" ref="prodImagesInput" multiple id="productPhoto"></b-form-file>
-              <!-- <b-form-file @change="onFileSelected($event)" :file-name-formatter="formatNames" id="productPhoto"></b-form-file> -->
+              <!-- <b-form-file @change="onFileSelected($event.target.files)" :file-name-formatter="formatNames" ref="prodImagesInput" multiple id="productPhoto"></b-form-file> -->
+              <b-form-file @change="imagesAdd" :file-name-formatter="formatNames" ref="prodImagesInput" multiple id="productPhoto" title=" "></b-form-file>
             </b-form-group>
+
+            <b-row align-v="center" class="uploaded-files">
+                <div class="img-wrapp p-2" v-for="(prodImage, index) in image" :key="index">
+                    <b-img thumbnail fluid :src="prodImage"></b-img>
+                    <!-- <i @click="deleteImage(prodImage,index)" class="delete-img fa fa-times"></i> -->
+                    <i @click="removeImage(index)" class="delete-img fas fa-times-circle"></i>
+                </div>
+            </b-row>
 
             <!-- Product Price -->
             <b-form-group label="Price:" label-for="productPrice"
@@ -88,6 +96,7 @@
 </template>
 
 <script>
+import infoToastMixin from '~/mixins/infoToast'
   export default {
     head: {
       title: 'Add a new product'
@@ -112,6 +121,7 @@
         console.log(err)
       }
     },
+    mixins: [infoToastMixin],
     data() {
       return {
         categoryID: null,
@@ -122,12 +132,50 @@
         stockQuantity: null,
         selectedFile: null,
         selectedFiles: [],
+        images: {},
+        image: [],
       }
     },
     comoputed:{
 
     },
     methods: {
+      imagesAdd(e) {
+        this.uploadedFiles = []
+        // debugger
+        var files = e.target.files || e.dataTransfer.files;
+
+        this.images = [];
+        this.image = [];
+        Array.prototype.push.apply(this.images, files);
+        if (!this.images.length)
+          return;
+
+        this.createImage(this.images);
+
+      },
+
+      createImage(file) {
+          for (var i = 0; i < file.length; i++) {
+            var reader = new FileReader();
+            var vm = this;
+
+            reader.onload = (e) => {
+              vm.image.push(e.target.result);
+              // console.log(vm.image);
+            };
+            reader.readAsDataURL(file[i]);
+          }
+      },
+      removeImage(key) {
+        this.image.splice(key, 1);
+        this.images.splice(key, 1);
+        this.$refs.prodImagesInput.setFiles(this.images)
+
+        if (!this.image.length) {
+          this.$refs.prodImagesInput.setFiles()
+        }
+      },
       onFileSelected(fileList) {
         // debugger
         // this.selectedFile = event.target.files[0]
@@ -160,8 +208,8 @@
       },
       async onAddProduct() {
         let data = new FormData()
-        for(let i=0; i<this.selectedFiles.length; i++) {
-          data.append('prodImages', this.selectedFiles[i])
+        for(let i=0; i<this.images.length; i++) {
+          data.append('prodImages', this.images[i])
         }
         data.append('title', this.title)
         data.append('price', this.price)
@@ -176,40 +224,38 @@
         let result = await this.$axios.$post('http://localhost:4004/api/products', data)
         console.log(`The new product ${this.title} is added successfully...`)
         this.$refs.prodImagesInput.reset()
+        this.image = []
         // this.$refs.productForm.reset()
         // this.selectedFiles = []
         // this.formatNames()
-        this.makeToast()
+        this.makeToast(this.title, 'add')
         this.resetProductForm()
         // this.$router.push('/')
       },
-      makeToast(append = false) {
-        // Use a shorter name for this.$createElement
-        const h = this.$createElement
-        // Increment the toast count
-        // Create the message
-        const vNodesMsg = h(
-          'p',
-          { class: ['text-center', 'mb-2'] },
-          [
-            h('b-spinner', { props: { type: 'grow', small: true } }),
-            'The new product ',
-            h('strong', `${this.title}`),
-            ' is added successfully... ',
-            h('b-spinner', { props: { type: 'grow', small: true } })
-          ],
-        )
-        this.$bvToast.toast(vNodesMsg, {
-          title: 'Product Upload Status',
-          autoHideDelay: 5000,
-          appendToast: append,
-          variant: 'info'
-        })
-      }
     }
   };
 
 </script>
 
+
 <style lang="scss" scoped>
+.img-wrapp{
+  position: relative;
+  width: 25%;
+  .img-thumbnail {
+    padding: 1rem;
+  }
+  .delete-img.fas {
+    position: absolute;
+    right: 5px;
+    top: 0px;
+    cursor: pointer;
+    font-size: 18px !important;
+    color:unset !important;
+    transition: color .2s ease-in;
+    &:hover {
+      color: orangered !important;
+    }
+  }
+}
 </style>

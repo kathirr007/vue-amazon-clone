@@ -104,6 +104,7 @@
 </template>
 
 <script>
+  import infoToastMixin from '~/mixins/infoToast'
   export default {
     async asyncData({ $axios, params }) {
       try {
@@ -128,7 +129,7 @@
       }
     },
     head: {
-      title: 'Add a new product'
+      title: 'Update Product'
     },
     data() {
       return {
@@ -140,6 +141,7 @@
         image: [],
       }
     },
+    mixins: [infoToastMixin],
     watch:{
       /* mergedFiles() {
         this.$refs.prodImagesInput.setFiles(this.mergedFiles)
@@ -208,10 +210,10 @@
           data.append('prodImages', this.mergedFiles[i])
         }) */
         for(let i=0; i<this.images.length; i++) {
-          debugger
+          // debugger
           data.append('prodImages', this.images[i])
         }
-        debugger
+        // debugger
         data.append('title', this.product.title)
         data.append('price', this.product.price)
         data.append('description', this.product.description)
@@ -228,10 +230,10 @@
         // this.$refs.productForm.reset()
         // this.selectedFiles = []
         // this.formatNames()
-        this.makeToast()
-        // this.$router.push('/')
+        this.$router.push('/')
+        this.makeToast(this.product.title, 'update')
       },
-      makeToast(append = false) {
+      /* makeToast(append = false) {
         // Use a shorter name for this.$createElement
         const h = this.$createElement
         // Increment the toast count
@@ -253,7 +255,7 @@
           appendToast: append,
           variant: 'info'
         })
-      },
+      }, */
       deleteImage(img, index) {
         // debugger
         this.uploadedFiles.splice(index, 1);
