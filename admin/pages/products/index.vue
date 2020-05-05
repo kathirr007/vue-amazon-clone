@@ -97,6 +97,7 @@
 
 <script>
 import infoToastMixin from '~/mixins/infoToast'
+import imgUploadMixin from '~/mixins/imgUpload'
   export default {
     head: {
       title: 'Add a new product'
@@ -121,7 +122,7 @@ import infoToastMixin from '~/mixins/infoToast'
         console.log(err)
       }
     },
-    mixins: [infoToastMixin],
+    mixins: [infoToastMixin, imgUploadMixin],
     data() {
       return {
         categoryID: null,
@@ -140,51 +141,6 @@ import infoToastMixin from '~/mixins/infoToast'
 
     },
     methods: {
-      imagesAdd(e) {
-        this.uploadedFiles = []
-        // debugger
-        var files = e.target.files || e.dataTransfer.files;
-
-        this.images = [];
-        this.image = [];
-        Array.prototype.push.apply(this.images, files);
-        if (!this.images.length)
-          return;
-
-        this.createImage(this.images);
-
-      },
-
-      createImage(file) {
-          for (var i = 0; i < file.length; i++) {
-            var reader = new FileReader();
-            var vm = this;
-
-            reader.onload = (e) => {
-              vm.image.push(e.target.result);
-              // console.log(vm.image);
-            };
-            reader.readAsDataURL(file[i]);
-          }
-      },
-      removeImage(key) {
-        this.image.splice(key, 1);
-        this.images.splice(key, 1);
-        this.$refs.prodImagesInput.setFiles(this.images)
-
-        if (!this.image.length) {
-          this.$refs.prodImagesInput.setFiles()
-        }
-      },
-      onFileSelected(fileList) {
-        // debugger
-        // this.selectedFile = event.target.files[0]
-        this.selectedFiles = event.target.files
-        // for(let i=0; i<fileList.length; i++) {
-        //   this.selectedFiles.push(fileList[i])
-        // }
-        // console.log(this.selectedFiles, typeof(this.selectedFiles))
-      },
       formatNames(files=[]) {
         // this.selectedFile = files[0]
         if(files.length == 0) {

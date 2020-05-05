@@ -25,6 +25,9 @@
     "sass-loader": "^8.0.2"
   },
   "devDependencies": {
-    "cors": "^2.8.5"
+    "@babel/runtime-corejs3": "^7.9.6",
+    "core-js": "3",
+    "cors": "^2.8.5",
+    "vue-carousel": "^0.18.0"
   }
 }

@@ -85,7 +85,7 @@ router.get('/products/:id', async(req,res) => {
 })
 
 // PUT request - Update a single product
-router.put("/products/:id", upload.array("prodImages", 3), async (req, res) => {
+router.put("/products/:id", upload.array("prodImages"), async (req, res) => {
   try {
     let prodImages = req.files? req.files.map((file) => {
         return {

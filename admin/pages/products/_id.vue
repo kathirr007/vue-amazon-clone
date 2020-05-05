@@ -105,6 +105,7 @@
 
 <script>
   import infoToastMixin from '~/mixins/infoToast'
+  import imgUploadMixin from '~/mixins/imgUpload'
   export default {
     async asyncData({ $axios, params }) {
       try {
@@ -137,11 +138,9 @@
         selectedFiles: [],
         uploadedFiles: [],
         mergedFiles: [],
-        images: {},
-        image: [],
       }
     },
-    mixins: [infoToastMixin],
+    mixins: [infoToastMixin, imgUploadMixin],
     watch:{
       /* mergedFiles() {
         this.$refs.prodImagesInput.setFiles(this.mergedFiles)
@@ -155,42 +154,6 @@
       // this.mergedFiles.push(...this.uploadedFiles)
     },
     methods: {
-      imagesAdd(e) {
-        this.uploadedFiles = []
-        // debugger
-        var files = e.target.files || e.dataTransfer.files;
-
-        this.images = [];
-        this.image = [];
-        Array.prototype.push.apply(this.images, files);
-        if (!this.images.length)
-          return;
-
-        this.createImage(this.images);
-
-      },
-
-      createImage(file) {
-          for (var i = 0; i < file.length; i++) {
-            var reader = new FileReader();
-            var vm = this;
-
-            reader.onload = (e) => {
-              vm.image.push(e.target.result);
-              // console.log(vm.image);
-            };
-            reader.readAsDataURL(file[i]);
-          }
-      },
-      removeImage(key) {
-        this.image.splice(key, 1);
-        this.images.splice(key, 1);
-        this.$refs.prodImagesInput.setFiles(this.images)
-
-        if (!this.image.length) {
-          this.$refs.prodImagesInput.setFiles()
-        }
-      },
       formatNames(files=this.selectedFiles) {
         // this.selectedFile = files[0]
         if(files.length == 0) {

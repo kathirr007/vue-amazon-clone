@@ -47,9 +47,18 @@
         </div>
       </div> -->
       <div class="row">
+        <!-- <div>
+          <client-only>
+            <carousel v-bind="options">
+              <slide v-for="i in 5" :key="i" class="img-wrapper">
+                <img src="https://via.placeholder.com/150" />
+              </slide>
+            </carousel>
+          </client-only>
+        </div> -->
         <div>
           <b-card-group columns class="px-3">
-            <b-card
+            <!-- <b-card
               v-for="(product, index) in products" :key="product._id"
               :title="product.title"
               :img-src="product.photo"
@@ -79,6 +88,44 @@
                 <nuxt-link :to="`products/${product._id}`" variant="primary" class="btn btn-primary">Update</nuxt-link>
                 <b-button href="#" variant="dark" @click.prevent="onDeleteProduct(product._id, index, product.title)">Delete</b-button>
               </div>
+            </b-card> -->
+            <b-card
+              v-for="(product, index) in products" :key="product._id"
+              tag="article"
+              class="mb-2 history-box p-2"
+            >
+              <client-only v-if="product.prodImages && product.prodImages.length !=0">
+                <carousel v-bind="carouselOptions">
+                  <slide v-for="(image, i) in product.prodImages" :key="i">
+                    <b-img :src="image.location"></b-img>
+                  </slide>
+                </carousel>
+              </client-only>
+              <div v-else class="img-wrap text-center">
+                <b-img :src="product.photo" fluid></b-img>
+              </div>
+              <h3 class="card-title">{{ product.title }}</h3>
+              <b-card-text>
+                {{product.description}}
+              </b-card-text>
+              <b-card-text>
+                <a href=""></a>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <span class="a-letter-space"></span>
+                <span class="a-color-tertiary a-size-small asin-reviews">(1774)</span>
+              </b-card-text>
+              <b-card-text>
+                Price: <span class="text-danger">{{product.price}}</span>
+              </b-card-text>
+
+              <div class="float-right">
+                <nuxt-link :to="`products/${product._id}`" variant="primary" class="btn btn-primary">Update</nuxt-link>
+                <b-button href="#" variant="dark" @click.prevent="confirmDeletion(product._id, index, product.title)">Delete</b-button>
+              </div>
             </b-card>
 
           </b-card-group>
@@ -90,6 +137,7 @@
 
 <script>
 import infoToastMixin from '~/mixins/infoToast'
+// import { Carousel, Slide } from 'vue-carousel';
 
 export default {
   head: {
@@ -111,9 +159,85 @@ export default {
   },
   mixins: [infoToastMixin],
   components: {
-
+    Carousel: () => process.browser ? import('vue-carousel').then(m => m.Carousel) : null,
+    Slide: () => process.browser ? import('vue-carousel').then(m => m.Slide) : null
+  },
+  data(){
+    return {
+      slide: 0,
+      deleteConfirmation: '',
+      carouselOptions: {
+        loop: true,
+        perPage: 1,
+        // paginationEnabled: false,
+        autoplay: false,
+        paginationColor: "#ffb300",
+        // autoplayHoverPause: true
+      }
+    }
   },
   methods: {
+    confirmDeletion(id, index, title) {
+      debugger
+      this.deleteConfirmation = ''
+      const h = this.$createElement
+      // Using HTML string
+      const titleVNode = h('div', {
+        domProps: {
+          innerHTML: 'Please Confirm'
+        }
+      })
+      // More complex structure
+      const messageVNode = h('p', {
+        class: ['mb-0 text-center']
+      }, [
+          'Please confirm that you want to delete ',
+          // h('br'),
+          h('strong', `${title} `),
+          // h('br'),
+          'from Products list'
+        ])
+      // We must pass the generated VNodes as arrays
+      this.$bvModal.msgBoxConfirm([messageVNode], {
+        title: [titleVNode],
+        titleClass : 'text-white',
+        centered: true,
+        size: 'md'
+      })
+      .then(value => {
+          if (value == true) {
+            this.onDeleteProduct(id, index, title)
+          } else {
+            return
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
+/*       this.$bvModal.msgBoxConfirm(`Please confirm that you want to delete <span class="font-weight-bold">${title}</span>`, {
+          title: 'Please Confirm',
+          titleClass: 'text-white',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'YES',
+          cancelTitle: 'NO',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+        .then(value => {
+          if (value == true) {
+            this.onDeleteProduct(id, index, title)
+          } else {
+            return
+          }
+        })
+        .catch(err => {
+          // An error occurred
+        }) */
+    },
     async onDeleteProduct(id, index, title) {
       try {
         // let productTitle = this.products[index].title
@@ -138,8 +262,9 @@ export default {
 }
 </script>
 
-<style>
- .card-img-top {
+<style lang="scss" scoped>
+ .card-img-top, .img-wrap .img-fluid, .VueCarousel-slide img {
+   width: 100%;
    height: 200px;
    object-fit: contain;
  }
@@ -152,6 +277,46 @@ export default {
  @media (min-width: 992px) {
    .card-columns {
      column-count: 3;
+   }
+ }
+/*  .VueCarousel {
+   .VueCarousel-wrapper {
+     .VueCarousel-inner{
+       .VueCarousel-slide {
+         img {
+           width: 100%;
+           height: auto;
+         }
+       }
+     }
+   }
+ } */
+</style>
+<style lang="scss">
+ .VueCarousel-dot-container {
+   margin-top: 0 !important;
+  .VueCarousel-dot {
+    margin-top: 0 !important;
+    &:focus,&:active {
+      outline: none !important;
+    }
+    &.VueCarousel-dot--active {
+      // margin-top: 0 !important;
+      width: 15px !important;
+      height: 15px !important;
+      background-color: chocolate !important;
+    }
+  }
+ }
+ .b-toaster{
+   &.b-toaster-top-right{
+     .b-toaster-slot {
+       min-width: 300px;
+       max-width: 45%;
+       .b-toast, .toast {
+         max-width: unset;
+       }
+      }
    }
  }
 </style>
