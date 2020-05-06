@@ -44,8 +44,8 @@
 
             <!-- Product images -->
             <b-form-group label="Photo:" label-for="productPhoto">
-              <!-- <b-form-file @change="onFileSelected($event.target.files)" :file-name-formatter="formatNames" ref="prodImagesInput" multiple id="productPhoto" title=" "></b-form-file> -->
-              <b-form-file @change="imagesAdd" :file-name-formatter="formatNames" ref="prodImagesInput" multiple id="productPhoto" title=" "></b-form-file>
+              <!-- <b-form-file @change="onFileSelected($event.target.files)" :file-name-formatter="formatNames" ref="imagesInput" multiple id="productPhoto" title=" "></b-form-file> -->
+              <b-form-file @change="imagesAdd" :file-name-formatter="formatNames" ref="imagesInput" multiple id="productPhoto" title=" "></b-form-file>
               <!-- <b-form-file @change="onFileSelected($event)" :file-name-formatter="formatNames" id="productPhoto"></b-form-file> -->
               <b-alert class="my-2" show variant="warning">Note: Uploading new images will replace the existing images</b-alert>
             </b-form-group>
@@ -148,7 +148,7 @@
     mixins: [infoToastMixin, imgUploadMixin],
     watch:{
       /* mergedFiles() {
-        this.$refs.prodImagesInput.setFiles(this.mergedFiles)
+        this.$refs.imagesInput.setFiles(this.mergedFiles)
       } */
     },
     comoputed:{
@@ -194,7 +194,7 @@
 
         let result = await this.$axios.$put(`http://localhost:4004/api/products/${this.$route.params.id}`, data)
         console.log(`The product ${this.product.title} is updated successfully...`)
-        // this.$refs.prodImagesInput.reset()
+        // this.$refs.imagesInput.reset()
         // this.$refs.productForm.reset()
         // this.selectedFiles = []
         // this.formatNames()

@@ -11,7 +11,9 @@ export default {
   methods: {
     imagesAdd(e) {
       this.uploadedFiles = []
-      this.product.photo = ''
+      if(this.product) {
+        this.product.photo = ''
+      }
       // debugger
       var files = e.target.files || e.dataTransfer.files;
 
@@ -42,10 +44,14 @@ export default {
     removeImage(key) {
       this.image.splice(key, 1);
       this.images.splice(key, 1);
-      this.$refs.prodImagesInput.setFiles(this.images)
+      /* if(this.$refs.prodImagesInput) {
+      } else if (this.$refs.prodImagesInput) {
+
+      } */
+      this.$refs.imagesInput.setFiles(this.images)
 
       if (!this.image.length) {
-        this.$refs.prodImagesInput.setFiles()
+        this.$refs.imagesInput.setFiles()
       }
     },
   }

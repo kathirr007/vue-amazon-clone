@@ -44,8 +44,8 @@
 
             <!-- Product images -->
             <b-form-group label="Photo:" label-for="productPhoto">
-              <!-- <b-form-file @change="onFileSelected($event.target.files)" :file-name-formatter="formatNames" ref="prodImagesInput" multiple id="productPhoto"></b-form-file> -->
-              <b-form-file @change="imagesAdd" :file-name-formatter="formatNames" ref="prodImagesInput" multiple id="productPhoto" title=" "></b-form-file>
+              <!-- <b-form-file @change="onFileSelected($event.target.files)" :file-name-formatter="formatNames" ref="imagesInput" multiple id="productPhoto"></b-form-file> -->
+              <b-form-file @change="imagesAdd" :file-name-formatter="formatNames" ref="imagesInput" multiple id="productPhoto" title=" "></b-form-file>
             </b-form-group>
 
             <b-row align-v="center" class="uploaded-files">
@@ -179,7 +179,7 @@ import imgUploadMixin from '~/mixins/imgUpload'
 
         let result = await this.$axios.$post('http://localhost:4004/api/products', data)
         console.log(`The new product ${this.title} is added successfully...`)
-        this.$refs.prodImagesInput.reset()
+        this.$refs.imagesInput.reset()
         this.image = []
         // this.$refs.productForm.reset()
         // this.selectedFiles = []
