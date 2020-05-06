@@ -11,7 +11,7 @@
           <b-form ref="productForm">
             <!-- Category Selection dropdown -->
             <b-form-group label="Category:" label-for="productCategory">
-              <b-form-select id="productCategory" class="text-capitalize" v-model="product.category" required>
+              <b-form-select id="productCategory" class="text-capitalize" v-model="product.category._id" required>
                 <option value="null">Select Category of the product</option>
                 <option v-for="category in categories" class="text-capitalize" :key="category._id" :value="category._id">
                   {{ category.type }}
@@ -21,7 +21,7 @@
 
             <!-- Owner Selection dropdown -->
             <b-form-group label="Owner:" class="text-capitalize" label-for="productOwner">
-              <b-form-select id="productOwner" v-model="product.owner" required>
+              <b-form-select id="productOwner" v-model="product.owner._id" required>
                 <option value="null">Select Owner of the product</option>
                 <option v-for="owner in owners" :key="owner._id" :value="owner._id">
                   {{ owner.name }}
@@ -54,6 +54,11 @@
             <b-row v-if="uploadedFiles.length !==0" align-v="center" class="uploaded-files">
                 <div class="img-wrapp p-2" v-for="(prodImage, index) in uploadedFiles" :key="index">
                     <b-img thumbnail fluid :src="prodImage.location"></b-img>
+                </div>
+            </b-row>
+            <b-row v-else-if="product.photo != ''" align-v="center" class="uploaded-files">
+                <div class="img-wrapp p-2">
+                    <b-img thumbnail fluid :src="product.photo"></b-img>
                 </div>
             </b-row>
             <b-row v-else align-v="center" class="uploaded-files">
@@ -117,7 +122,7 @@
           categories, owners, product
         ])
 
-        console.log(productResponse)
+        console.log(productResponse.product)
 
         return {
           categories: catResponse.categories,
@@ -181,8 +186,8 @@
         data.append('price', this.product.price)
         data.append('description', this.product.description)
         data.append('stockQuantity', this.product.stockQuantity)
-        data.append('ownerID', this.product.owner)
-        data.append('categoryID', this.product.category)
+        data.append('ownerID', this.product.owner._id)
+        data.append('categoryID', this.product.category._id)
         // data.append('photo', this.selectedFile, this.selectedFile.name)
         // data.append('prodImages', this.selectedFiles)
         // debugger

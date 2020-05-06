@@ -12,7 +12,7 @@ const s3 = new aws.S3()
 const upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: 'vue-amazon-clone-v1',
+        bucket: 'vue-amazon-clone-v2',
         acl: 'public-read',
         contentType: multerS3.AUTO_CONTENT_TYPE,
         metadata: (req, file, cb) => {
@@ -27,7 +27,7 @@ const upload = multer({
 const multiUpload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: 'vue-amazon-clone-v1',
+        bucket: 'vue-amazon-clone-v2',
         acl: 'public-read',
         contentType: multerS3.AUTO_CONTENT_TYPE,
         metadata: (req, file, cb) => {

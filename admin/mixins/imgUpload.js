@@ -11,6 +11,7 @@ export default {
   methods: {
     imagesAdd(e) {
       this.uploadedFiles = []
+      this.product.photo = ''
       // debugger
       var files = e.target.files || e.dataTransfer.files;
 

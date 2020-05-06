@@ -54,7 +54,7 @@ router.post('/products', upload.array('prodImages', 3), async (req, res) => {
 // GET request - get all products
 router.get('/products', async(req,res) => {
     try {
-        let products = await Product.find()
+        let products = await Product.find().populate('owner category').exec()
         res.json({
             success: true,
             products: products
@@ -71,7 +71,7 @@ router.get('/products', async(req,res) => {
 // /api/products/123wr323
 router.get('/products/:id', async(req,res) => {
     try {
-        let product = await Product.findOne({ _id: req.params.id })
+        let product = await Product.findOne({ _id: req.params.id }).populate('owner category').exec()
         res.json({
             success: true,
             product: product
@@ -111,7 +111,7 @@ router.put("/products/:id", upload.array("prodImages"), async (req, res) => {
       {
         $set: updateQuery
       },
-      { upsert: true, new: true }
+      { upsert: true }
     );
     res.json({
       success: true,

@@ -178,7 +178,7 @@ export default {
   },
   methods: {
     confirmDeletion(id, index, title) {
-      debugger
+      // debugger
       this.deleteConfirmation = ''
       const h = this.$createElement
       // Using HTML string
