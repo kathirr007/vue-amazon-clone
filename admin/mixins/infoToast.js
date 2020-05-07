@@ -8,7 +8,10 @@ export default {
 
   },
   methods: {
-    makeToast(title, status) {
+    capitalize(string) {
+      return string.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())))
+    },
+    makeToast(type, title, status) {
       let statusUpdate = ((status) => {
         if (status == 'update') {
           return 'updated'
@@ -26,14 +29,14 @@ export default {
         { class: ['text-center', 'mb-2'] },
         [
           h('b-spinner', { props: { type: 'grow', small: true } }),
-          'The product ',
+          `The ${this.capitalize(type)} `,
           h('strong', `${title}`),
            ` is ${statusUpdate(status)} successfully... `,
           h('b-spinner', { props: { type: 'grow', small: true } })
         ],
       )
       this.$root.$bvToast.toast(vNodesMsg, {
-        title: 'Product update Status',
+        title: `${this.capitalize(type)} update Status`,
         autoHideDelay: 5000,
         appendToast: false,
         variant: 'info'

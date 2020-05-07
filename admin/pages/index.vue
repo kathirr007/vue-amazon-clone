@@ -137,6 +137,7 @@
 
 <script>
 import infoToastMixin from '~/mixins/infoToast'
+import deleteConfirmationMixin from '~/mixins/deleteConfirmation'
 // import { Carousel, Slide } from 'vue-carousel';
 
 export default {
@@ -157,7 +158,7 @@ export default {
 
     }
   },
-  mixins: [infoToastMixin],
+  mixins: [infoToastMixin, deleteConfirmationMixin],
   components: {
     Carousel: () => process.browser ? import('vue-carousel').then(m => m.Carousel) : null,
     Slide: () => process.browser ? import('vue-carousel').then(m => m.Slide) : null
@@ -165,7 +166,6 @@ export default {
   data(){
     return {
       slide: 0,
-      deleteConfirmation: '',
       carouselOptions: {
         loop: true,
         perPage: 1,
@@ -177,51 +177,13 @@ export default {
     }
   },
   methods: {
-    confirmDeletion(id, index, title) {
-      // debugger
-      this.deleteConfirmation = ''
-      const h = this.$createElement
-      // Using HTML string
-      const titleVNode = h('div', {
-        domProps: {
-          innerHTML: 'Please Confirm'
-        }
-      })
-      // More complex structure
-      const messageVNode = h('p', {
-        class: ['mb-0 text-center']
-      }, [
-          'Please confirm that you want to delete ',
-          // h('br'),
-          h('strong', `${title} `),
-          // h('br'),
-          'from Products list'
-        ])
-      // We must pass the generated VNodes as arrays
-      this.$bvModal.msgBoxConfirm([messageVNode], {
-        title: [titleVNode],
-        titleClass : 'text-white',
-        centered: true,
-        size: 'md'
-      })
-      .then(value => {
-          if (value == true) {
-            this.onDeleteProduct(id, index, title)
-          } else {
-            return
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
     async onDeleteProduct(id, index, title) {
       try {
         // let productTitle = this.products[index].title
         // debugger
         let response = await this.$axios.$delete(`http://localhost:4004/api/products/${id}`)
         // console.log(response.products)
-        this.makeToast(title, 'delete')
+        this.makeToast('product', title, 'delete')
         if(response.status) {
           this.products.splice(index, 1)
         }

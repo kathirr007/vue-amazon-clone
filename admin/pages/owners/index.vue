@@ -38,9 +38,9 @@
           </b-form>
           <b-card class="mt-3" header="Available Onwers">
             <b-list-group>
-              <b-list-group-item class="text-capitalize" v-for="owner in owners" :key="owner._id">
+              <b-list-group-item class="text-capitalize" v-for="(owner, index) in owners" :key="owner._id">
                 {{ owner.name }}
-                <b-badge href="#" class="float-right" @click.prevent="confirmDeletion(owner._id, index, owner.title)" variant="danger">Delete</b-badge>
+                <b-badge href="#" class="float-right" @click.prevent="confirmDeletion(owner._id, index, owner.name)" variant="danger">Delete</b-badge>
                 <nuxt-link class="badge badge-info float-right mr-2" :to="`/owners/${owner._id}`" variant="info">Update</nuxt-link>
               </b-list-group-item>
             </b-list-group>
@@ -54,6 +54,7 @@
 <script>
   import infoToastMixin from '~/mixins/infoToast'
   import imgUploadMixin from '~/mixins/imgUpload'
+  import deleteConfirmationMixin from '~/mixins/deleteConfirmation'
   export default {
     transition(to, from) {
       if (!from) {
@@ -64,7 +65,7 @@
     head: {
       title: 'Add a new owner'
     },
-    mixins: [infoToastMixin, imgUploadMixin],
+    mixins: [infoToastMixin, imgUploadMixin, deleteConfirmationMixin],
     async asyncData({ $axios }) {
       try {
         let res = await $axios.$get('http://localhost:4004/api/owners')
@@ -127,33 +128,25 @@
         if(result.status) {
           this.owners.push(dataObject)
           this.$refs.imagesInput.reset()
-          this.makeToast()
+          this.makeToast('owner', `${this.name}`, 'add')
           this.resetOwnerForm()
         }
         // this.$router.push('/')
       },
-      makeToast(append = false) {
-        // Use a shorter name for this.$createElement
-        const h = this.$createElement
-        // Increment the toast count
-        // Create the message
-        const vNodesMsg = h(
-          'p',
-          { class: ['text-center', 'mb-2'] },
-          [
-            h('b-spinner', { props: { type: 'grow', small: true } }),
-            'The new owner ',
-            h('strong', `${this.name}`),
-            ' is added successfully... ',
-            h('b-spinner', { props: { type: 'grow', small: true } })
-          ],
-        )
-        this.$bvToast.toast(vNodesMsg, {
-          title: 'Add Owner Status',
-          autoHideDelay: 5000,
-          appendToast: append,
-          variant: 'info'
-        })
+      async onDeleteProduct(id, index, title) {
+        try {
+          // let productTitle = this.products[index].title
+          debugger
+          let response = await this.$axios.$delete(`http://localhost:4004/api/owners/${id}`)
+          // console.log(response.products)
+          debugger
+          this.makeToast('owner', title, 'delete')
+          if (response.status) {
+            this.owners.splice(index, 1)
+          }
+        } catch (err) {
+          console.log(err)
+        }
       }
     }
   };
@@ -183,7 +176,8 @@
 .list-group-item{
   .badge {
     opacity: 0;
-    transform: scale(0);
+    transform: scale(1,0);
+    transform-origin: center bottom;
     // height: 0;
     transition: all .25s ease-in;
   }
@@ -191,7 +185,7 @@
     .badge {
       opacity: 1;
       // height: auto;
-      transform: scale(1);
+      transform: scale(1,1);
     }
   }
 }
