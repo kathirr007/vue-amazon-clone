@@ -7,7 +7,7 @@
           <!-- Buttons -->
           <nuxt-link to="/products" class="a-button-buy-again">Add a new product</nuxt-link>
           <nuxt-link to="/category" class="a-button-buy-again mr-2">Add a new category</nuxt-link>
-          <nuxt-link to="/owner" class="a-button-buy-again">Add a new owner</nuxt-link>
+          <nuxt-link to="/owners" class="a-button-buy-again">Add a new owner</nuxt-link>
         </div>
       </div>
     </div>
