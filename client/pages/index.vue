@@ -111,6 +111,12 @@
 import FeaturedProduct from '~/components/FeaturedProduct'
 
 export default {
+  transition(to, from) {
+    if (!from) {
+      return 'slide-left'
+    }
+    return 'slide-right'
+  },
   head() {
     return {
       title: 'Client | Home'

@@ -351,6 +351,12 @@
 
 <script>
   export default {
+    transition(to, from) {
+      if (!from) {
+        return 'slide-left'
+      }
+      return 'slide-right'
+    },
     async asyncData({$axios, params}) {
       try {
         let response = await $axios.$get(`/api/products/${params.id}`)
