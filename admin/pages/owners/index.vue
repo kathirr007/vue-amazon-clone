@@ -112,10 +112,10 @@
       },
       async onAddOwner() {
         let data = new FormData()
-
+        // if(this.name == '' || this.about == '')
         data.append('name', this.name)
         data.append('about', this.about)
-        data.append('photo', this.selectedFile)
+        data.append('photo', this.images[0])
 
         let result = await this.$axios.$post('http://localhost:4004/api/owners', data)
         console.log(`The new owner ${this.name} is added successfully...`)

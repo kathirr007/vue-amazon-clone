@@ -34,15 +34,15 @@
                     <b-img thumbnail fluid :src="prodImage.location"></b-img>
                 </div>
             </b-row> -->
-            <b-row v-if="owner.photo != ''" align-v="center" class="uploaded-files">
-                <div class="img-wrapp p-2">
-                    <b-img thumbnail fluid :src="owner.photo"></b-img>
-                </div>
-            </b-row>
-            <b-row align-v="center" class="uploaded-files">
+            <b-row v-if="image.length != 0" align-v="center" class="uploaded-files">
                 <div class="img-wrapp p-2" v-for="(ownerImage, index) in image" :key="index">
                     <b-img thumbnail fluid :src="ownerImage"></b-img>
                     <!-- <i @click="removeImage(index)" class="delete-img fas fa-times-circle"></i> -->
+                </div>
+            </b-row>
+            <b-row v-else-if="owner.photo != ''" align-v="center" class="uploaded-files">
+                <div class="img-wrapp p-2">
+                    <b-img thumbnail fluid :src="owner.photo"></b-img>
                 </div>
             </b-row>
 
@@ -136,14 +136,14 @@
           debugger
           data.append('prodImages', this.mergedFiles[i])
         }) */
-        for(let i=0; i<this.images.length; i++) {
+        /* for(let i=0; i<this.images.length; i++) {
           // debugger
           data.append('prodImages', this.images[i])
-        }
+        } */
         // debugger
         data.append('name', this.owner.name)
         data.append('about', this.owner.about)
-        data.append('photo', this.selectedFiles[0])
+        data.append('photo', this.images[0])
         // data.append('prodImages', this.selectedFiles)
         // debugger
 
@@ -154,7 +154,7 @@
         // this.selectedFiles = []
         // this.formatNames()
         this.$router.push('/owners')
-        this.makeToast(this.owner.name, 'update')
+        this.makeToast('owner', this.owner.name, 'update')
       },
       /* makeToast(append = false) {
         // Use a shorter name for this.$createElement
