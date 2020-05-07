@@ -39,10 +39,9 @@
                     <b-img thumbnail fluid :src="owner.photo"></b-img>
                 </div>
             </b-row>
-            <b-row v-else align-v="center" class="uploaded-files">
-                <div class="img-wrapp p-2">
-                    <b-img thumbnail fluid :src="prodImage"></b-img>
-                    <!-- <i @click="deleteImage(prodImage,index)" class="delete-img fa fa-times"></i> -->
+            <b-row align-v="center" class="uploaded-files">
+                <div class="img-wrapp p-2" v-for="(ownerImage, index) in image" :key="index">
+                    <b-img thumbnail fluid :src="ownerImage"></b-img>
                     <!-- <i @click="removeImage(index)" class="delete-img fas fa-times-circle"></i> -->
                 </div>
             </b-row>
@@ -69,6 +68,12 @@
   import infoToastMixin from '~/mixins/infoToast'
   import imgUploadMixin from '~/mixins/imgUpload'
   export default {
+    transition(to, from) {
+      if (!from) {
+        return 'slide-left'
+      }
+      return 'slide-right'
+    },
     async asyncData({ $axios, params }) {
       try {
         // let categories = $axios.$get('http://localhost:4004/api/categories')

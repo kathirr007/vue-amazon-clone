@@ -23,16 +23,26 @@
 
             <!-- Owner photo -->
             <b-form-group label="Photo:" label-for="ownerPhoto">
-              <b-form-file @change="onFileSelected($event)" :file-name-formatter="formatNames" ref="ownerPhotoInput" id="ownerPhoto"></b-form-file>
+              <b-form-file @change="imagesAdd($event)" :file-name-formatter="formatNames" ref="imagesInput" id="ownerPhoto"></b-form-file>
               <!-- <b-form-file @change="onFileSelected($event)" :file-name-formatter="formatNames" id="productPhoto"></b-form-file> -->
             </b-form-group>
+            <b-row align-v="center" class="uploaded-files">
+                <div class="img-wrapp p-2" v-for="(ownerImage, index) in image" :key="index">
+                    <b-img thumbnail fluid :src="ownerImage"></b-img>
+                    <!-- <i @click="removeImage(index)" class="delete-img fas fa-times-circle"></i> -->
+                </div>
+            </b-row>
 
-            <b-button type="button" @click.prevent="onAddOwner" variant="primary">Add Category</b-button>
+            <b-button type="button" @click.prevent="onAddOwner" variant="primary">Add Owner</b-button>
             <b-button  ref="formReset" variant="danger">Reset</b-button>
           </b-form>
           <b-card class="mt-3" header="Available Onwers">
             <b-list-group>
-              <b-list-group-item class="text-capitalize" v-for="owner in owners" :key="owner._id">{{ owner.name }}</b-list-group-item>
+              <b-list-group-item class="text-capitalize" v-for="owner in owners" :key="owner._id">
+                {{ owner.name }}
+                <b-badge href="#" class="float-right" @click.prevent="confirmDeletion(owner._id, index, owner.title)" variant="danger">Delete</b-badge>
+                <nuxt-link class="badge badge-info float-right mr-2" :to="`/owners/${owner._id}`" variant="info">Update</nuxt-link>
+              </b-list-group-item>
             </b-list-group>
           </b-card>
         </div>
@@ -42,10 +52,19 @@
 </template>
 
 <script>
+  import infoToastMixin from '~/mixins/infoToast'
+  import imgUploadMixin from '~/mixins/imgUpload'
   export default {
+    transition(to, from) {
+      if (!from) {
+        return 'slide-left'
+      }
+      return 'slide-right'
+    },
     head: {
       title: 'Add a new owner'
     },
+    mixins: [infoToastMixin, imgUploadMixin],
     async asyncData({ $axios }) {
       try {
         let res = await $axios.$get('http://localhost:4004/api/owners')
@@ -107,7 +126,7 @@
 
         if(result.status) {
           this.owners.push(dataObject)
-          this.$refs.ownerPhotoInput.reset()
+          this.$refs.imagesInput.reset()
           this.makeToast()
           this.resetOwnerForm()
         }
@@ -142,4 +161,38 @@
 </script>
 
 <style lang="scss" scoped>
+.img-wrapp{
+  position: relative;
+  width: 25%;
+  .img-thumbnail {
+    padding: 1rem;
+  }
+  .delete-img.fas {
+    position: absolute;
+    right: 5px;
+    top: 0px;
+    cursor: pointer;
+    font-size: 18px !important;
+    color:unset !important;
+    transition: color .2s ease-in;
+    &:hover {
+      color: orangered !important;
+    }
+  }
+}
+.list-group-item{
+  .badge {
+    opacity: 0;
+    transform: scale(0);
+    // height: 0;
+    transition: all .25s ease-in;
+  }
+  &:hover {
+    .badge {
+      opacity: 1;
+      // height: auto;
+      transform: scale(1);
+    }
+  }
+}
 </style>
