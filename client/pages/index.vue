@@ -25,35 +25,41 @@
                         </a>
                       </b-col>
                       <b-col col sm="9">
-                        <div class="a-row a-spacing-small">
+                        <b-row>
                           <!-- Title and Date -->
-                          <nuxt-link :to="`/products/${product._id}`" class="a-link-normal">
-                            <h2 class="a-size-medium">
-                              {{product.title}}
-                              <span class="a-letter-space"></span>
-                              <span class="a-letter-space"></span>
-                              <span class="a-size-small a-color-secondary">Sep 3, 2020</span>
-                            </h2>
-                          </nuxt-link>
-                        </div>
+                          <b-col>
+                            <nuxt-link :to="`/products/${product._id}`" class="a-link-normal">
+                              <h2 class="a-size-medium">
+                                {{product.title}}
+                                <span class="a-letter-space"></span>
+                                <span class="a-letter-space"></span>
+                                <span class="a-size-small a-color-secondary">Sep 3, 2020</span>
+                              </h2>
+                            </nuxt-link>
+                          </b-col>
+                        </b-row>
                         <!-- Author's name -->
-                        <div class="a-row a-spacing-small">
-                          <span class="a-size-small a-color-secondary">by</span>
-                          <span class="a-size-small a-color-secondary">
-                            <a href="#" class="a-link-normal a-text-normal">{{ product.owner ? product.owner.name: 'N/A' }}</a>
-                          </span>
-                        </div>
-                        <div class="a-row">
-                          <span class="a-size-small">Ships to USA</span>
-                        </div>
-                        <div class="a-row a-spacing-small">
+                        <b-row>
+                          <b-col>
+                            <span class="a-size-small a-color-secondary">by</span>
+                            <span class="a-size-small a-color-secondary">
+                              <a href="#" class="a-link-normal a-text-normal">{{ product.owner ? product.owner.name: 'N/A' }}</a>
+                            </span>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col>
+                            <span class="a-size-small">Ships to USA</span>
+                          </b-col>
+                        </b-row>
+                        <b-row>
                           <b-col col sm="7">
-                            <div class="row">
+                            <div>
                               <!-- <b-link href="#">Hardcover</b-link> -->
                               <a href="" class="a-link-normal a-text-normal">Hardcover</a>
                             </div>
                             <!-- Price -->
-                            <div class="row">
+                            <div>
                               <a href="#" class="a-link-normal a-text-normal">
                                 <span class="a-offscreen">${{ product.price }}</span>
                                 <span class="a-color-base sx-zero-spacing">
@@ -70,7 +76,7 @@
                               </span>
                             </div>
 
-                            <div class="row">
+                            <div>
                               <!-- Audible Trail -->
                               <b-col cols="12" class="border-bottom pb-1 px-0">
                                 <span class="a-size-small a-color-secondary">Free with Audible trial</span>
@@ -81,9 +87,6 @@
                                 <span class="a-letter-space"></span>
                                 <a href="#" class="a-size-small a-link-normal a-text-normal">Audio CD</a>
                               </b-col>
-                            </div>
-                            <div class="row">
-
                             </div>
 
                           </b-col>
@@ -107,7 +110,7 @@
                               </client-only>
                             </div>
                           </b-col>
-                        </div>
+                        </b-row>
                       </b-col>
                     </div>
                   </div>
