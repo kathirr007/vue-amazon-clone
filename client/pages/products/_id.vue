@@ -92,7 +92,14 @@
                   <i class="fas fa-chevron-down" style="font-size: 8px !important; color #555 !important;"></i>
                 </a> (Author)
               </div>
-              <div class="revieGroup border-bottom pb-2"></div>
+              <div class="reviewGroup border-bottom pb-2">
+                <client-only>
+                  <star-rating :increment="0.5" :rating="product.averageRating" :show-rating="false" :glow="1" :border-width="1"
+                    :rounded-corners="true" :read-only="true" :star-size="18"
+                    :star-points="[23,2,14,17,0,19,10,34,7,50,23,43,38,50,36,34,46,19,31,17]">
+                  </star-rating>
+                </client-only>
+              </div>
               <!-- A tags Dummy data -->
               <div class="mediaMatrix mt-2">
                 <div class="formats">
@@ -344,12 +351,17 @@
             </div>
           </div>
         </div>
+
+        <review-section :product="product" :reviews="reviews"></review-section>
       </div>
     </div>
   </main>
 </template>
 
 <script>
+  import ReviewSection from '~/components/ReviewSection'
+  import StarRating from 'vue-star-rating'
+
   export default {
     transition(to, from) {
       if (!from) {
@@ -359,12 +371,22 @@
     },
     async asyncData({$axios, params}) {
       try {
-        let response = await $axios.$get(`/api/products/${params.id}`)
-
+        let singleProduct = await $axios.$get(`/api/products/${params.id}`)
+        let manyReviews = await $axios.$get(`/api/reviews/${params.id}`)
         // console.log(response)
 
+        const[productResponse, reviewsResponse] = await Promise.all([
+          singleProduct, manyReviews
+        ])
+
+        // console.log(typeof(productResponse.product.rating))
+        // console.log(productResponse.product.rating)
+        // console.log(typeof(reviewsResponse.reviews[0].rating))
+        // console.log(reviewsResponse.reviews[0].rating)
+
         return {
-          product: response.product
+          product: productResponse.product,
+          reviews: reviewsResponse.reviews
         }
       } catch(err) {
         console.log(err)
@@ -374,6 +396,10 @@
       return {
         title: `${this.product.title.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())))}`
       }
+    },
+    components: {
+      ReviewSection,
+      StarRating
     }
   }
 </script>
