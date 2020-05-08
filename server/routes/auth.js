@@ -57,6 +57,49 @@ router.get('/auth/user', verifyToken, async (req,res) => {
     }
 })
 
+/* Update a profile */
+router.put('/auth/user', verifyToken, async (req,res) => {
+    try {
+
+        /* let updateQuery = {}
+        if(req.body.name) updateQuery.name = req.body.name;
+        if(req.body.email) updateQuery.email = req.body.email;
+        if(req.body.password) updateQuery.password = req.body.password;
+
+        let fonundUser = await User.findOneAndUpdate(
+          { _id: req.decoded._id },
+          {
+            $set: updateQuery
+          },
+          { upsert: true }
+        );
+        res.json({
+          success: true,
+          message: `Successfully updated ${req.body.name} Profile`
+        }); */
+
+        let foundUser = await User.findOne({ _id: req.decoded._id })
+        if(foundUser) {
+            console.log(req.body)
+            if(req.body.name) foundUser.name = req.body.name;
+            if(req.body.email) foundUser.email = req.body.email;
+            if(req.body.password) foundUser.password = req.body.password;
+
+            await foundUser.save()
+            // debugger
+            res.json({
+                success: true,
+                message: `Successfully updated ${req.body.name} Profile`
+            })  
+        }
+    } catch(err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+})
+
 /* Login Route */
 router.post('/auth/login', async (req,res) => {
     try {

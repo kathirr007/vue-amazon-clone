@@ -1,4 +1,4 @@
-const URL = 'http://localhost:4004'
+const URL = "http://localhost:4004"
 
 
 export default {
@@ -52,19 +52,27 @@ export default {
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
     // Doc: https://auth.nuxtjs.org/
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
+    // Doc: https://github.com/nuxt-community/proxy-module
+    '@nuxtjs/proxy'
   ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    proxy: true,
+    // proxy: true,
     baseURL: URL
   },
 
   proxy: {
-    '/api': URL
+    // "/api": process.env.API_URL
+    /* "/api": {
+      target: "http://localhost:4004",
+      pathRewrite: {
+        '^/api' : '/'
+      }
+    } */
   },
   /*
   ** Build configuration

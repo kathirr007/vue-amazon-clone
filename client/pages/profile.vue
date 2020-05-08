@@ -5,19 +5,21 @@
         <div class="col-md-6 offset-md-3" >
           <h1 class="text-center mt-2">
              Profile {{ $auth.$state.user.name | capitalize }}
+             <small><a href="#" @click="onLogout">Logout</a></small>
           </h1>
+
           <!-- <b-form @submit="onSubmit" @reset="onReset" v-if="show"> -->
           <b-form>
             <!-- User name -->
             <b-form-group label="Name:" label-for="userName"
               description="Please enter new name here">
-              <b-form-input id="userName" v-model="$auth.$state.user.name" type="text" placeholder="Enter your new Name">
+              <b-form-input id="userName" v-model="name" type="text" :placeholder="$auth.$state.user.name">
               </b-form-input>
             </b-form-group>
             <!-- Email -->
             <b-form-group label="Email:" label-for="email"
               description="Please enter new email here">
-              <b-form-input id="email" v-model="$auth.$state.user.email" type="email" placeholder="Enter email">
+              <b-form-input id="email" v-model="email" type="email" :placeholder="$auth.$state.user.email">
               </b-form-input>
             </b-form-group>
             <!-- Password -->
@@ -59,6 +61,36 @@
     },
     comoputed:{
 
+    },
+    methods:{
+      async onUpdateProfile() {
+        // debugger
+        let data = {
+          name: this.name != '' ? this.name : this.$auth.$state.user.name,
+          email: this.email != '' ? this.email : this.$auth.$state.user.email,
+          password: this.password != '' ? this.password : this.$auth.$state.user.password,
+        }
+        // debugger
+        try {
+          let response = await this.$axios.$put('/api/auth/user', data)
+          // debugger
+          if(response.success) {
+            // debugger
+            this.name = ''
+            this.email = ''
+            this.password = ''
+
+            await this.$auth.fetchUser()
+          }
+
+        } catch(err) {
+          console.log(err)
+        }
+      },
+      async onLogout() {
+        await this.$auth.logout()
+        // this.$router.push('/')
+      }
     },
   };
 
