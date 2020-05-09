@@ -19,6 +19,8 @@ export default {
           return 'deleted'
         } else if (status == 'add') {
           return 'added'
+        } else if (status == 'setdefault') {
+          return 'has been set as default'
         }
       })
       // Use a shorter name for this.$createElement
@@ -31,7 +33,7 @@ export default {
           h('b-spinner', { props: { type: 'grow', small: true } }),
           `The ${this.capitalize(type)} `,
           h('strong', `${title}`),
-           ` is ${statusUpdate(status)} successfully... `,
+           ` ${statusUpdate(status)} successfully... `,
           h('b-spinner', { props: { type: 'grow', small: true } })
         ],
       )

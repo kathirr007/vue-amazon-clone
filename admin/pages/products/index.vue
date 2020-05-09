@@ -99,8 +99,16 @@
 import infoToastMixin from '~/mixins/infoToast'
 import imgUploadMixin from '~/mixins/imgUpload'
   export default {
-    head: {
-      title: 'Add a new product'
+    transition(to, from) {
+      if (!from) {
+        return 'slide-left'
+      }
+      return 'slide-right'
+    },
+    head() {
+      return {
+        title: 'Add a new product'
+      }
     },
     async asyncData({ $axios }) {
       try {

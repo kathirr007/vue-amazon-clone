@@ -34,6 +34,7 @@ export default {
   */
   plugins: [
     {src: '~/plugins/filters'},
+    {src: '~/plugins/localStorage', ssr: false},
   ],
   /*
   ** Nuxt.js dev-modules

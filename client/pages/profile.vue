@@ -49,6 +49,12 @@
 
 <script>
   export default {
+    transition(to, from) {
+      if (!from) {
+        return 'slide-left'
+      }
+      return 'slide-right'
+    },
     head: {
       title: 'Update Profile'
     },

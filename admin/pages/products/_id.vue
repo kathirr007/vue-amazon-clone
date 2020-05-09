@@ -199,7 +199,7 @@
         // this.selectedFiles = []
         // this.formatNames()
         this.$router.push('/')
-        this.makeToast(this.product.title, 'update')
+        this.makeToast('product', this.product.title, 'update')
       },
       /* makeToast(append = false) {
         // Use a shorter name for this.$createElement
