@@ -196,6 +196,12 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+  transition(to, from) {
+    if (!from) {
+      return 'slide-left'
+    }
+    return 'slide-right'
+  },
   head() {
     return {
       title: `${this.$auth.$state.user.name} | Shopping Cart`
