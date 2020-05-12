@@ -1,5 +1,9 @@
 const router = require('express').Router()
 const moment = require('moment')
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const verifyToken = require('../middlewares/verify-token')
+const User = require('../models/user')
+const Order = require('../models/order')
 
 const SHIPMENT = {
     normal: {
@@ -34,6 +38,74 @@ router.post('/shipment', (req, res) => {
         success: true,
         shipment: shipment
     })
+})
+
+// Stripe Payment
+router.post('/payment', verifyToken, async (req, res) => {
+    let totalPrice = Math.round(req.body.totalPrice * 100)
+    let foundUser = await User.findOne({ _id: req.decoded._id }).populate('address').exec()
+    debugger
+    // console.log(foundUser)
+    stripe.customers.create({
+        email: req.decoded.email,
+        name: req.decoded.name,
+        // address: {
+        //     line1: '510 Townsend St',
+        //     postal_code: '98140',
+        //     city: 'San Francisco',
+        //     state: 'CA',
+        //     country: 'US',
+        //   },
+        address: {
+            country: foundUser.address.country,
+            line1: foundUser.address.streetAddress,
+            city: foundUser.address.city,
+            state: foundUser.address.state,
+            postal_code: foundUser.address.zipCode,
+        }
+    })
+    .then(customer => {
+        return stripe.customers.createSource(customer.id, {
+            source: 'tok_visa'
+        })
+    })
+    .then(source => {
+        return stripe.charges.create({
+            amount: totalPrice,
+            currency: 'inr',
+            customer: source.customer,
+            description: 'Software development services',
+        })
+    })
+    .then(async charge => {
+        let order =new Order()
+        let cart = req.body.cart
+
+        cart.map(product => {
+            order.products.push({
+                productID: product._id,
+                quantity: parseInt(product.quantity),
+                price: product.price
+            })
+        })
+
+        order.owner = req.decoded._id
+        order.estimatedDelivery = req.body.estimatedDelivery
+        await order.save()
+
+        res.json({
+            success: true,
+            message: 'Successfully made a payment'
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    })
+
+
 })
 
 // GET request - get categories

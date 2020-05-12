@@ -30,8 +30,11 @@
                   <span class="nav-line-1" id="glow-ingress-line1">
                     Deliver to
                   </span>
-                  <span class="nav-line-2" id="glow-ingress-line2">
+                  <span v-if="$auth.$state.user" class="nav-line-2" id="glow-ingress-line2">
                     {{$auth.$state.user.address.city}}
+                  </span>
+                  <span v-else class="nav-line-2" id="glow-ingress-line2">
+                    India
                   </span>
                 </div>
 

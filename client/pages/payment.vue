@@ -37,7 +37,7 @@
             <div class="a-section">
               <h2>Make a paymnet</h2>
               <div class="a-section a-spacing-none a-spacing-top-small">
-                <b>The total price is $9999</b>
+                <b>The total price is ${{getCartTotalPriceWithShipping}}</b>
               </div>
 
               <!-- Error Message -->
@@ -68,7 +68,7 @@
                 <div class="a-spacing-top-large">
                   <span class="a-button-register">
                     <span class="a-button-inner">
-                      <span class="a-button-text">
+                      <span class="a-button-text" @click="onPurchase">
                         Purchase
                       </span>
                     </span>
@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
   export default {
     transition(to, from) {
       if (!from) {
@@ -103,12 +104,36 @@
         card: null
       }
     },
+    computed: {
+      ...mapGetters(['getCart', 'getCartTotalPriceWithShipping', 'getEstimatedDelivery'])
+    },
     mounted() {
       this.stripe = Stripe('pk_test_krAf3HsWv3GLs5EXlXXRpv1O00IWashr2l')
       let elements = this.stripe.elements()
       this.card = elements.create('card')
       this.card.mount(this.$refs.card)
     },
+    methods: {
+      async onPurchase() {
+        try {
+          let token = await this.stripe.createToken(this.card)
+
+          let response = await this.$axios.$post('/api/payment', {
+            token: token,
+            totalPrice: this.getCartTotalPriceWithShipping,
+            cart: this.getCart,
+            estimatedDelivery: this.estimatedDelivery
+          })
+
+          if(response.success) {
+            this.$store.commit('clearCart')
+            this.$router.push('/')
+          }
+        } catch(err) {
+          console.log(err)
+        }
+      }
+    }
   }
 </script>
 
