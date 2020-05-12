@@ -35,7 +35,7 @@ const userRoutes = require('./routes/auth')
 const reviewRoutes = require('./routes/review')
 const addressRoutes = require('./routes/address')
 const paymentRoutes = require('./routes/payment')
-const orderRoutes = require('./routes/orders')
+const orderRoutes = require('./routes/order')
 
 app.use('/api', productRoutes)
 app.use('/api', categoryRoutes)

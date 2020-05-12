@@ -8,9 +8,9 @@ const verifyToken = require('../middlewares/verify-token')
 
 
 // GET request - get orders
-router.get('/categories', verifyToken, async(req,res) => {
+router.get('/orders', verifyToken, async(req,res) => {
     try {
-        let categories = await Owner.find({ owner: req.decoded._id }).deepPopulate('owner products.productID.owner').exec()
+        let products = await Order.find({ owner: req.decoded._id }).deepPopulate('owner products.productID.owner').exec()
         res.json({
             success: true,
             products: products
