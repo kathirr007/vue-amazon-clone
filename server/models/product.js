@@ -43,7 +43,7 @@ ProductSchema.plugin(mongooseAlgolia, {
 let Model = mongoose.model('Product', ProductSchema)
 Model.SyncToAlgolia()
 Model.SetAlgoliaSettings({
-    searchableAttributes: ['title', 'category', 'averageRating']
+    searchableAttributes: ['title', 'category', 'averageRating', 'price']
 })
 
 module.exports = Model

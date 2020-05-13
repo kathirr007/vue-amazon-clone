@@ -10,8 +10,20 @@ const index = client.initIndex(process.env.ALGOLIA_INDEX)
 
 // POST request - create search using Algolia
 router.post('/search', async (req,res) => {
+    const queries = [{
+        indexName: process.env.ALGOLIA_INDEX,
+        query: 'search in products index',
+        params: {
+          hitsPerPage: 3
+        }
+      }];
+      
+      
     try {
         let result = await index.search(req.body.title)
+        /* let results = await client.multipleQueries(queries).then(({ results }) => {
+            console.log(results);
+          }); */
         
         res.json(result.hits)
         

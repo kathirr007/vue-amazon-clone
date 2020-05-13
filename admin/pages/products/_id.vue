@@ -11,7 +11,7 @@
           <b-form ref="productForm">
             <!-- Category Selection dropdown -->
             <b-form-group label="Category:" label-for="productCategory">
-              <b-form-select id="productCategory" class="text-capitalize" v-model="product.category._id" required>
+              <b-form-select id="productCategory" class="text-capitalize" v-model="category" required>
                 <option value="null">Select Category of the product</option>
                 <option v-for="category in categories" class="text-capitalize" :key="category._id" :value="category._id">
                   {{ category.type }}
@@ -21,12 +21,13 @@
 
             <!-- Owner Selection dropdown -->
             <b-form-group label="Owner:" class="text-capitalize" label-for="productOwner">
-              <b-form-select id="productOwner" v-model="product.owner._id" required>
+              <b-form-select id="productOwner" v-model="owner" required>
                 <option value="null">Select Owner of the product</option>
                 <option v-for="owner in owners" :key="owner._id" :value="owner._id">
                   {{ owner.name }}
                 </option>
               </b-form-select>
+
             </b-form-group>
 
             <!-- Product title -->
@@ -122,7 +123,7 @@
           categories, owners, product
         ])
 
-        console.log(productResponse.product)
+        // console.log(productResponse.product)
 
         return {
           categories: catResponse.categories,
@@ -139,6 +140,8 @@
     },
     data() {
       return {
+        category: '',
+        owner: '',
         selectedFile: null,
         selectedFiles: [],
         uploadedFiles: [],
@@ -157,6 +160,8 @@
     mounted() {
       this.uploadedFiles = this.product.prodImages
       // this.mergedFiles.push(...this.uploadedFiles)
+      this.category = this.product.category != null ? this.product.category._id : ''
+      this.owner = this.product.owner != null ? this.product.owner._id : ''
     },
     methods: {
       formatNames(files=this.selectedFiles) {
@@ -186,8 +191,8 @@
         data.append('price', this.product.price)
         data.append('description', this.product.description)
         data.append('stockQuantity', this.product.stockQuantity)
-        data.append('ownerID', this.product.owner._id)
-        data.append('categoryID', this.product.category._id)
+        data.append('ownerID', this.owner)
+        data.append('categoryID', this.category)
         // data.append('photo', this.selectedFile, this.selectedFile.name)
         // data.append('prodImages', this.selectedFiles)
         // debugger
