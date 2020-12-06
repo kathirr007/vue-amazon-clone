@@ -6,7 +6,33 @@ const client = algoliaSearch(
     process.env.ALGOLIA_SECRET
 )
 
+/* const fetchProducts = () => {
+  const products = router.get('/products', async (req, res) => {
+    try {
+      let products = await Product.find()
+        .populate('owner category')
+        .populate('reviews', 'rating')
+        .exec()
+      res.json({
+        success: true,
+        products: products
+      })
+    } catch (err) {
+      res.status(500).json({
+        success: false,
+        message: err.message
+      })
+    }
+  })
+  return products;
+}
+const products = fetchProducts() */
+
 const index = client.initIndex(process.env.ALGOLIA_INDEX)
+
+/* index.replaceAllObjects(products).then(({ objectIDs }) => {
+  console.log(objectIDs);
+}); */
 
 // POST request - create search using Algolia
 router.post('/search', async (req,res) => {

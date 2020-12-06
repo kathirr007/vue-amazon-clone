@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import FeaturedProduct from '~/components/FeaturedProduct'
+import FeaturedProduct from '@/components/FeaturedProduct'
 import StarRating from 'vue-star-rating'
 
 export default {
