@@ -202,6 +202,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.card {
+  &.history-box {
+    &:hover {
+      z-index: 10;
+    }
+   .VueCarousel .VueCarousel-slide{
+     &:hover {
+       z-index: 12;
+     }
+   }
+  }
+}
+/* .VueCarousel-slide {
+  transform: scale(0);
+  &.VueCarousel-slide-active {
+    transform: scale(1);
+  }
+} */
  .card-img-top, .img-wrap .img-fluid, .VueCarousel-slide img {
    width: 100%;
    height: 200px;
